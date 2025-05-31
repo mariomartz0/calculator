@@ -34,6 +34,7 @@ body {
   background-color: #000429;
   font-size: 2rem;
   font-weight: 700;
+  user-select: none;
 }
 
 .calculator-display {
@@ -61,6 +62,13 @@ body {
   text-align: center;
   background-color: #29339b;
   border-radius: 50%;
+  transition: transform 250ms;
+  cursor: pointer;
+}
+
+.calculator-btn:hover {
+  transform: scale(1.1);
+  background-color: rgba(41, 51, 155, 0.6);
 }
 
 .calculator-btns .calculator-btn.zero {
@@ -68,11 +76,19 @@ body {
   border-radius: 40px;
 }
 
-.light-btn {
+.calculator-btn.light-btn {
   background-color: #b4b8ab;
   color: black;
 }
 
-.highlighted-btn {
+.calculator-btn.light-btn:hover {
+  background-color: rgba(180, 184, 171, 0.8);
+}
+
+.calculator-btn.highlighted-btn {
   background-color: #228cdb;
+}
+
+.calculator-btn.highlighted-btn:hover {
+  background-color: rgba(34, 140, 219, 0.8);
 }

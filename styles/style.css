@@ -38,7 +38,11 @@ body {
 }
 
 .calculator-display {
+  display: flex;
+  flex-direction: row-reverse;
+  overflow: hidden;
   padding-right: 15px;
+  padding-left: 15px;
   height: 100px;
   font-size: 5rem;
   line-height: 130px;

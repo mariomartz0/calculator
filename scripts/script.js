@@ -1,13 +1,19 @@
 const calculatorDisplay = document.querySelector(".calculator-display");
-calculatorDisplay.textContent = "";
+calculatorDisplay.textContent = "0";
 
 const calculatorBtns = document.querySelector(".calculator-btns");
 calculatorBtns.addEventListener("click", (event) => {
+  if (calculatorDisplay.textContent === "0") {
+    calculatorDisplay.textContent = "";
+  }
+
   if (
     event.target.classList.contains("operand-btn") &&
     calculatorDisplay.textContent.length < 8
   ) {
     calculatorDisplay.textContent += event.target.textContent;
+  } else if (event.target.classList.contains("ac")) {
+    calculatorDisplay.textContent = "0";
   }
   return console.log(event.target);
 });

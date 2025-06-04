@@ -1,23 +1,33 @@
 const calculatorDisplay = document.querySelector(".calculator-display");
 calculatorDisplay.textContent = "0";
+let num1 = null;
+let num2 = null;
+let operatorSymbol = null;
 
 const calculatorBtns = document.querySelector(".calculator-btns");
 calculatorBtns.addEventListener("click", (event) => {
+  let target = event.target;
+  // operand-btn click events
   if (
-    event.target.classList.contains("operand-btn") &&
+    target.classList.contains("operand-btn") &&
     calculatorDisplay.textContent.length < 8
   ) {
     if (calculatorDisplay.textContent === "0") {
       calculatorDisplay.textContent = "";
     }
-    calculatorDisplay.textContent += event.target.textContent;
-  } else if (event.target.classList.contains("ac")) {
+    calculatorDisplay.textContent += target.textContent;
+  } else if (target.classList.contains("ac")) {
+    // AC btn click event
     calculatorDisplay.textContent = "0";
+  } else if (target.classList.contains("percent")) {
+    // percent btn click event
+    num1 = calculatorDisplay.textContent;
+    operatorSymbol = "percentage";
+    calculatorDisplay.textContent = operate(num1, operatorSymbol);
   }
-  return console.log(event.target);
 });
 
-function operate(operand1, operand2, operator) {
+function operate(operand1, operator, operand2) {
   let result;
   switch (operator) {
     case "addition":
@@ -32,8 +42,11 @@ function operate(operand1, operand2, operator) {
     case "division":
       result = divide(+operand1, +operand2);
       break;
+    case "percentage":
+      result = percent(+operand1);
+      break;
   }
-  console.log(result);
+  return result;
 }
 
 function add(operand1, operand2) {

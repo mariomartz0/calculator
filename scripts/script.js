@@ -64,6 +64,6 @@ function toggleSign(operand) {
   return operand;
 }
 
-function percent(operand) {
-  return operand * 0.01;
+function percent(operand1, operand2 = 0.01) {
+  return operand1 * operand2;
 }

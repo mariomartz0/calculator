@@ -43,6 +43,7 @@ body {
   height: 100px;
   font-size: 5rem;
   text-align: right;
+  line-height: 100px;
 }
 
 .calculator-btns {
@@ -91,10 +92,6 @@ body {
 
 .calculator-btn.highlighted-btn:hover {
   background-color: rgba(34, 140, 219, 0.8);
-}
-
-.disabled {
-  display: none;
 }
 
 .calculator-btn.operator-btn.active {

@@ -19,44 +19,77 @@ let newText = "";
 const calculatorBtns = document.querySelector(".calculator-btns");
 calculatorBtns.addEventListener("click", (event) => {
   let target = event.target;
-
-  // operand-btn click events
   if (target.classList.contains("operand-btn")) {
-    // Removes default 0 from beginning of display string
-    if (operatorChars.includes(calculatorDisplay.textContent[0])) {
+    // Never allow the first digit to be a 0
+    if (newText[0] === "0") {
       newText = "";
     }
-    newText += target.textContent;
+    switch (target.id) {
+      case "decimal":
+        // Never allow more than one decimal in a digit
+        if (!newText.includes(".")) {
+          appendText(target.textContent);
+        }
+        break;
+      case "zero":
+      case "one":
+      case "two":
+      case "three":
+      case "four":
+      case "five":
+      case "six":
+      case "seven":
+      case "eight":
+      case "nine":
+        appendText(target.textContent);
+        break;
+    }
+
+    updateDisplay(newText);
   } else if (target.classList.contains("operator-btn")) {
-    if (operator === null && target.id !== "equals") {
-      operator = target.id;
-      target.classList.toggle("active");
-      updateNum1(calculatorDisplay.textContent);
+    switch (target.id) {
+      case "equals":
+        if (num1 !== null && operator !== null) {
+          updateNum2(newText);
+          newText = operate(num1, operator, num2);
+          reset();
+          updateNum1(newText);
+        }
+        break;
+      case "addition":
+      case "subtraction":
+      case "multiplication":
+      case "division":
+        if (operator === null) {
+          updateNum1(newText);
+          operator = target.id;
+          document.querySelector(`#${target.id}`).classList.add("active");
+        } else {
+          newText = calculatorDisplay.textContent;
+        }
+        break;
+    }
+
+    updateDisplay(newText);
+    if (operator !== null) {
       newText = "";
-    } else {
-      document.querySelector(`#${operator}`).classList.toggle("active");
-      updateNum2(calculatorDisplay.textContent);
-      newText = operate(num1, operator, num2);
-      reset();
     }
   } else if (target.classList.contains("special-operator-btn")) {
-    if (target.id === "ac") {
-      reset();
-      newText = "0";
-    } else {
-      operator = target.id;
-      updateNum1(calculatorDisplay.textContent);
-      newText = operate(num1, operator);
+    switch (target.id) {
+      case "ac":
+        newText = "0";
+        reset();
+        break;
+      case "toggleSign":
+        newText = calculatorDisplay.textContent * -1;
+        break;
+      case "percentage":
+        newText = calculatorDisplay.textContent * 0.01;
+        break;
     }
-  }
 
-  newText = String(newText);
-  if (newText.includes(".")) {
-    document.querySelector("#decimal").classList.add("disabled");
-  } else {
-    document.querySelector("#decimal").classList.remove("disabled");
+    updateDisplay(newText);
   }
-  updateDisplay(newText);
 });
 
 function operate(operand1, operator, operand2) {
@@ -74,14 +107,8 @@ function operate(operand1, operator, operand2) {
     case "division":
       result = divide(+operand1, +operand2);
       break;
-    case "toggleSign":
-      result = toggleSign(+operand1);
-      break;
-    case "percentage":
-      result = percent(+operand1);
-      break;
   }
-  return result;
+  return String(result);
 }
 
 function add(operand1, operand2) {
@@ -104,15 +131,19 @@ function divide(operand1, operand2) {
   return operand1 / operand2;
 }
 
-function toggleSign(operand) {
-  return (operand *= -1);
-}
-
-function percent(operand1, operand2 = 0.01) {
-  return operand1 * operand2;
+function appendText(text) {
+  newText += text;
 }
 
 function updateDisplay(newTextContent) {
+  if (newTextContent.length > 8) {
+    if (+newTextContent % 1 !== 0) {
+      newTextContent = String(Number.parseFloat(newTextContent).toFixed(2));
+    }
+    calculatorDisplay.style.fontSize = "2rem";
+  } else {
+    calculatorDisplay.style.fontSize = "5rem";
+  }
   calculatorDisplay.textContent = newTextContent;
 }
 
@@ -127,5 +158,8 @@ function updateNum2(num) {
 function reset() {
   num1 = null;
   num2 = null;
-  operator = null;
+  if (operator !== null) {
+    document.querySelector(`#${operator}`).classList.remove("active");
+    operator = null;
+  }
 }

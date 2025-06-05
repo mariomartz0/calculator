@@ -23,7 +23,7 @@ body {
   justify-content: center;
   align-items: center;
   padding-top: 25px;
-  background-color: #151625;
+  background-color: rgb(21, 22, 37);
 }
 
 .calculator {
@@ -71,7 +71,7 @@ body {
   background-color: rgba(41, 51, 155, 0.6);
 }
 
-.calculator-btns .calculator-btn.zero {
+#zero {
   width: 170px;
   border-radius: 40px;
 }
@@ -91,4 +91,12 @@ body {
 
 .calculator-btn.highlighted-btn:hover {
   background-color: rgba(34, 140, 219, 0.8);
+}
+
+.disabled {
+  display: none;
+}
+
+.calculator-btn.operator-btn.active {
+  background-color: #f26419;
 }

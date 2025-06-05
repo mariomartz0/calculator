@@ -1,30 +1,62 @@
 const calculatorDisplay = document.querySelector(".calculator-display");
 calculatorDisplay.textContent = "0";
+const operatorChars = [
+  "0",
+  "&#177;",
+  "%",
+  "&#247;",
+  "&#215;",
+  "&#8722;",
+  "&#43;",
+  "&#61;",
+];
+
 let num1 = null;
 let num2 = null;
-let operatorSymbol = null;
+let operator = null;
+let newText = "";
 
 const calculatorBtns = document.querySelector(".calculator-btns");
 calculatorBtns.addEventListener("click", (event) => {
   let target = event.target;
+
   // operand-btn click events
-  if (
-    target.classList.contains("operand-btn") &&
-    calculatorDisplay.textContent.length < 8
-  ) {
-    if (calculatorDisplay.textContent === "0") {
-      calculatorDisplay.textContent = "";
+  if (target.classList.contains("operand-btn")) {
+    // Removes default 0 from beginning of display string
+    if (operatorChars.includes(calculatorDisplay.textContent[0])) {
+      newText = "";
     }
-    calculatorDisplay.textContent += target.textContent;
-  } else if (target.classList.contains("ac")) {
-    // AC btn click event
-    calculatorDisplay.textContent = "0";
-  } else if (target.classList.contains("percent")) {
-    // percent btn click event
-    num1 = calculatorDisplay.textContent;
-    operatorSymbol = "percentage";
-    calculatorDisplay.textContent = operate(num1, operatorSymbol);
+    newText += target.textContent;
+  } else if (target.classList.contains("operator-btn")) {
+    if (operator === null && target.id !== "equals") {
+      operator = target.id;
+      target.classList.toggle("active");
+      updateNum1(calculatorDisplay.textContent);
+      newText = "";
+    } else {
+      document.querySelector(`#${operator}`).classList.toggle("active");
+      updateNum2(calculatorDisplay.textContent);
+      newText = operate(num1, operator, num2);
+      reset();
+    }
+  } else if (target.classList.contains("special-operator-btn")) {
+    if (target.id === "ac") {
+      reset();
+      newText = "0";
+    } else {
+      operator = target.id;
+      updateNum1(calculatorDisplay.textContent);
+      newText = operate(num1, operator);
+    }
   }
+
+  newText = String(newText);
+  if (newText.includes(".")) {
+    document.querySelector("#decimal").classList.add("disabled");
+  } else {
+    document.querySelector("#decimal").classList.remove("disabled");
+  }
+  updateDisplay(newText);
 });
 
 function operate(operand1, operator, operand2) {
@@ -41,6 +73,9 @@ function operate(operand1, operator, operand2) {
       break;
     case "division":
       result = divide(+operand1, +operand2);
+      break;
+    case "toggleSign":
+      result = toggleSign(+operand1);
       break;
     case "percentage":
       result = percent(+operand1);
@@ -70,13 +105,27 @@ function divide(operand1, operand2) {
 }
 
 function toggleSign(operand) {
-  if (Math.sign(operand) === 1 || Math.sign(operand) === -1) {
-    return (operand *= -1);
-  }
-
-  return operand;
+  return (operand *= -1);
 }
 
 function percent(operand1, operand2 = 0.01) {
   return operand1 * operand2;
+}
+
+function updateDisplay(newTextContent) {
+  calculatorDisplay.textContent = newTextContent;
+}
+
+function updateNum1(num) {
+  num1 = num;
+}
+
+function updateNum2(num) {
+  num2 = num;
+}
+
+function reset() {
+  num1 = null;
+  num2 = null;
+  operator = null;
 }
